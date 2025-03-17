@@ -41,7 +41,7 @@ class _SigninState extends State<Signin> {
                     TextFieldInput(label: "Password"),
                     SizedBox(height: 20,),
                     Button(text: "Sign in", onTap: (){
-                      Navigator.pushNamed(context, "/signin");
+                      Navigator.pushNamed(context, "/events");
                     }),
                     TextButton(onPressed: (){}, child: MainText(text: "Forgot password?", color: Colors.blue, textAlign: TextAlign.start,)),
                     SizedBox(height: 40,),

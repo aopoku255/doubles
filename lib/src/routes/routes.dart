@@ -1,4 +1,5 @@
 
+import 'package:doubles/src/screens/events.dart';
 import 'package:doubles/src/screens/login.dart';
 import 'package:doubles/src/screens/onboarding_screen.dart';
 import 'package:doubles/src/screens/signup.dart';
@@ -14,6 +15,7 @@ Map<String, WidgetBuilder> get appRoutes{
     '/login': (context) => const Login(),
     '/signin': (context) => const Signin(),
     '/signup': (context) => const Signup(),
+    '/events': (context) => const Events(),
 
   };
   }
