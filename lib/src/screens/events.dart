@@ -15,7 +15,7 @@ class Events extends StatefulWidget {
 class _EventsState extends State<Events> {
   int _selectedChipIndex = 0; // Track selected chip index
   final String name = "Andrews";
-  final String title = "Reimagining Africa’s Supply Chains for a Sustainable Future";
+  final String title = "";
   final List<String> _chipLabels = ["Music", "Food", "Sports", "Movies"];
   @override
   Widget build(BuildContext context) {
