@@ -56,7 +56,18 @@ class _EventsState extends State<Events> {
                 children: [
                   MainText(text: "Good day! ${name}"),
                   const SizedBox(height: 20),
-                  MainText(text: title),
+                  // MainText(text: title),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(100)
+                    ),
+                    child: TextFormField(
+
+                      decoration: InputDecoration(fillColor: Colors.red, border: InputBorder.none, hintText: "find events in...", hintStyle: TextStyle(color: Colors.white)),
+                      ),
+                  ),
 
                   // Chips Row
                   Padding(
