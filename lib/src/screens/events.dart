@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../service/events.dart';
 import '../widgets/OvalIcon.dart';
 import '../widgets/SessionCards.dart';
 import '../widgets/main_text.dart';
+import '../model/events.dart';  // Import the event model if you have one
 
 class Events extends StatefulWidget {
   const Events({super.key});
@@ -13,10 +15,18 @@ class Events extends StatefulWidget {
 }
 
 class _EventsState extends State<Events> {
-  int _selectedChipIndex = 0; // Track selected chip index
+  int _selectedChipIndex = 0;
   final String name = "Andrews";
-  final String title = "Reimagining Africa’s Supply Chains for a Sustainable Future";
   final List<String> _chipLabels = ["Music", "Food", "Sports", "Movies"];
+  final EventService _eventService = EventService();
+  late Future<List<Event>> _futureEvents;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureEvents = _eventService.getAllEvents();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,8 +50,8 @@ class _EventsState extends State<Events> {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFFC052DF), // First color
-              Color(0xFF23236C), // Second color
+              Color(0xFFC052DF),
+              Color(0xFF23236C),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -50,96 +60,105 @@ class _EventsState extends State<Events> {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MainText(text: "Good day! ${name}"),
-                  const SizedBox(height: 20),
-                  // MainText(text: title),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(100)
-                    ),
-                    child: TextFormField(
-
-                      decoration: InputDecoration(fillColor: Colors.red, border: InputBorder.none, hintText: "find events in...", hintStyle: TextStyle(color: Colors.white)),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                setState(() {
+                  _futureEvents = _eventService.getAllEvents();
+                });
+                await _futureEvents;
+              },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MainText(text: "Good day! $name"),
+                    const SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+                      decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(100)),
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          fillColor: Colors.red,
+                          border: InputBorder.none,
+                          hintText: "find events in...",
+                          hintStyle: TextStyle(color: Colors.white),
+                        ),
                       ),
-                  ),
-
-                  // Chips Row
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: List.generate(_chipLabels.length, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _selectedChipIndex = index; // Update selected index
-                                });
-                              },
-                              child: Container(
-                                margin: EdgeInsets.only(top: 20),
-                                width: 120,
-                                height: 34,
-                                decoration: BoxDecoration(color: index == _selectedChipIndex ? Colors.white : Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(50)),
-                                child: Center(child: MainText(text:_chipLabels[index], color: index == _selectedChipIndex ? Colors.purple : Colors.white, fontWeight: FontWeight.bold,)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: List.generate(_chipLabels.length, (index) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _selectedChipIndex = index;
+                                  });
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(top: 20),
+                                  width: 120,
+                                  height: 34,
+                                  decoration: BoxDecoration(
+                                      color: index == _selectedChipIndex
+                                          ? Colors.white
+                                          : Colors.white.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(50)),
+                                  child: Center(
+                                    child: MainText(
+                                      text: _chipLabels[index],
+                                      color: index == _selectedChipIndex ? Colors.purple : Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          );
-                        }),
+                            );
+                          }),
+                        ),
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 20),
+                    MainText(text: "Upcoming Events", fontWeight: FontWeight.bold, fontSize: 16),
+                    FutureBuilder<List<Event>>(
+                      future: _futureEvents,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Center(child: Text('No events found'));
+                        } else {
+                          final events = snapshot.data!;
+                          return Column(
+                            children: events.map((event) {
+                              return SessionCard(
+                                image: "assets/images/music.jpg",
+                                sessionTitle: event.eventTitle,
+                                startTime: event.eventStartTime,
+                                location: event.eventLocation,
 
-                  const SizedBox(height: 20),
-                  _selectedChipIndex >= 1 ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      MainText(text: "Keynote Speakers", fontWeight: FontWeight.bold, fontSize: 16,),
-
-                      SessionCard(image: "assets/images/music.jpg", sessionTitle: "Dale Rogers", startTime: "", description: "Dale S. Rogers is the ON Semiconductor Professor of Business at the Supply Chain Management department at Arizona State University. He is also the director of the Frontier Economies Logistics Lab and the co-director of the Internet Edge Supply Chain Lab at ASU."),
-                      SessionCard(image: "assets/images/music.jpg", sessionTitle: "Thomas Choi", startTime: "", description: "Thomas Choi is a Professor of Supply Chain Management at the W. P. Carey School of Business at Arizona State University. He leads the study of the upstream side of supply chains, where a buying company interfaces with many suppliers organized in various forms of networks.")
-                    ],
-                  ) : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const MainText(text: "Upcoming events", fontWeight: FontWeight.bold, fontSize: 16),
-                      SessionCard(
-                        image: "assets/images/music.jpg",
-                        sessionTitle: "Registration",
-                        startTime: "8:30am",
-                        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                      ),
-                      const SizedBox(height: 40),
-                      MainText(text: "past events", fontWeight: FontWeight.bold, fontSize: 16),
-                      SessionCard(
-                        image: "assets/images/music.jpg",
-                        sessionTitle: "Panel Discussion",
-                        startTime: "10:30am",
-                        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                      ),
-                      SessionCard(
-                        image: "assets/images/music.jpg",
-                        sessionTitle: "Cultural Dance",
-                        startTime: "12:30pm",
-                        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                      ),
-                    ],
-                  )
-                ],
+                              );
+                            }).toList(),
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
     );
-  }
-  }
+  }}
 

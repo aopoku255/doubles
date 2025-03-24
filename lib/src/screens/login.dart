@@ -55,7 +55,7 @@ class _LoginState extends State<Login> {
               width: MediaQuery.of(context).size.width,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/images/loginbg.jpg"),
+                  image: AssetImage("assets/images/redbull.jpeg"),
                   fit: BoxFit.cover,
                 ),
               ),
