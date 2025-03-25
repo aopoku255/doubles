@@ -10,8 +10,8 @@ class SessionCard extends StatelessWidget {
   final String image;
   final String sessionTitle;
   final String startTime;
-  final String description;
-  const SessionCard({super.key, required this.image, required this.sessionTitle, required this.startTime, required this.description});
+  final String location;
+  const SessionCard({super.key, required this.image, required this.sessionTitle, required this.startTime, required this.location});
 
   @override
   Widget build(BuildContext context) {
@@ -30,18 +30,29 @@ class SessionCard extends StatelessWidget {
           Container(
             width: MediaQuery.of(context).size.width,
             height: 200,
-            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20)), image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20)), image: DecorationImage(image: NetworkImage(image), fit: BoxFit.cover)),
           ),
           const SizedBox(height: 10,),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              MainText(text: sessionTitle, fontSize: 20,),
+              Container(
+
+                width: MediaQuery.of(context).size.width *0.7,
+                  child: MainText(text: sessionTitle, fontSize: 20, maxLines: 2,)),
               MainText(text: startTime, color: Colors.green,)
             ],
           ),
-          const SizedBox(height: 10,),
-          ExpandableText(text: description)
+          const SizedBox(height: 5,),
+          Row(
+            children: [
+              Icon(Icons.location_pin, color: Colors.white,),
+              Container(
+                  width: MediaQuery.of(context).size.width *0.7,
+                  child: MainText(text: location, maxLines: 3,)),
+            ],
+          )
         ],
       ),
     );

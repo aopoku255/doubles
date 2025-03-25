@@ -10,12 +10,13 @@ class MainText extends StatelessWidget {
   final Color? color;
   final double fontSize;
   final FontWeight? fontWeight;
+  final int? maxLines;
   const MainText({
     Key? key,
     required this.text,
     this.textAlign,
     this.color = AppColors.primaryWhite,
-    this.fontSize = 14, this.fontWeight,
+    this.fontSize = 14, this.fontWeight, this.maxLines = 1,
   }) : super(key: key);
 
   @override
@@ -24,7 +25,7 @@ class MainText extends StatelessWidget {
       text,
       textAlign: textAlign,
       softWrap: true,
-      maxLines: 1,
+      maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight),
     );
