@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:doubles/src/model/events.dart';
+import 'package:doubles/src/service/baseUrl.dart';
 import 'package:http/http.dart' as http;
 
 class EventService {
-  final String baseUrl = 'https://doublesapi.vercel.app/api/v1/event/get-events';
+  final String baseUrls = '${baseUrl}/event/get-events';
 
   Future<List<Event>> getAllEvents() async {
-    final response = await http.get(Uri.parse(baseUrl));
+    final response = await http.get(Uri.parse(baseUrls));
     print(response.body);
 
     if (response.statusCode == 201) {

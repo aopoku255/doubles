@@ -152,10 +152,13 @@ class _EventsState extends State<Events> {
                           return Column(
                             children: events.map((event) {
                               return SessionCard(
-                                image: "assets/images/music.jpg",
+                                image: "http://10.0.2.2:8080${event.eventImages}",
                                 sessionTitle: event.eventTitle,
                                 startTime: event.eventStartTime,
                                 location: event.eventLocation,
+                                onTap: (){
+                                    Navigator.pushNamed(context, "/events-details");
+                                },
                               );
                             }).toList(),
                           );

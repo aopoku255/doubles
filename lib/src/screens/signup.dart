@@ -1,3 +1,4 @@
+import 'package:doubles/src/service/baseUrl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -46,7 +47,7 @@ class _SignupState extends State<Signup> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       final response = await http.post(
-        Uri.parse('https://doublesapi.vercel.app/api/v1/auth/signup'),
+        Uri.parse('${baseUrl}/auth/signup'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': _emailController.text,
@@ -166,15 +167,15 @@ class _SignupState extends State<Signup> {
                         },
                       ),
                       SizedBox(height: 20),
-                      Button(text: "Sign up", onTap: _handleSignup),
+                      Button(text: "Sign up", onTap: _handleSignup, width: MediaQuery.of(context).size.width,),
                       SizedBox(height: 40),
                       MainText(text: "OTHER SIGN IN METHODS", color: Colors.black),
                       SizedBox(height: 10),
-                      Button(text: "Continue with Google", withIcon: true, color: Colors.white, iconImage: "assets/images/google.png"),
+                      Button(text: "Continue with Google", withIcon: true, color: Colors.white, iconImage: "assets/images/google.png", width: MediaQuery.of(context).size.width,),
                       SizedBox(height: 10),
-                      Button(text: "Continue with Facebook", withIcon: true, color: Colors.white, iconImage: "assets/images/facebook.png"),
+                      Button(text: "Continue with Facebook", withIcon: true, color: Colors.white, iconImage: "assets/images/facebook.png", width: MediaQuery.of(context).size.width,),
                       SizedBox(height: 10),
-                      Button(text: "Continue with X", withIcon: true, color: Colors.white, iconImage: "assets/images/twitter.png"),
+                      Button(text: "Continue with X", withIcon: true, color: Colors.white, iconImage: "assets/images/twitter.png", width: MediaQuery.of(context).size.width,),
                     ],
                   ),
                 ),

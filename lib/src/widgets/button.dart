@@ -9,6 +9,8 @@ class Button extends StatelessWidget {
   final double radius;
   final double horizontal;
   final double vertical;
+  final double height;
+  final double width;
   final double fontSize;
   final bool? withIcon;
   final String? iconImage;
@@ -21,7 +23,7 @@ class Button extends StatelessWidget {
     this.radius = 12.0,
     this.horizontal = 50,
     this.vertical = 15,
-    this.fontSize = 14, this.withIcon = false, this.iconImage = "assets/images/google.png",
+    this.fontSize = 14, this.withIcon = false, this.iconImage = "assets/images/google.png",  this.height = 60, this.width = 350,
   });
 
   @override
@@ -29,8 +31,8 @@ class Button extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-       width: MediaQuery.of(context).size.width,
-        height: 60,
+       width: width,
+        height: height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius),
           color: color,

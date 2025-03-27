@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:doubles/src/service/baseUrl.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -42,7 +43,7 @@ class _SigninState extends State<Signin> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       final response = await http.post(
-        Uri.parse('https://doublesapi.vercel.app/api/v1/auth/signin'),
+        Uri.parse('${baseUrl}/auth/signin'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': _emailController.text,
@@ -123,16 +124,16 @@ class _SigninState extends State<Signin> {
                       },
                     ),
                     SizedBox(height: 20,),
-                    Button(text: "Sign in", onTap: _handleSignin),
+                    Button(text: "Sign in", onTap: _handleSignin, width: MediaQuery.of(context).size.width,),
                     TextButton(onPressed: (){}, child: MainText(text: "Forgot password?", color: Colors.blue, textAlign: TextAlign.start,)),
                     SizedBox(height: 40,),
                     MainText(text: "OTHER SIGN IN METHODS", color: Colors.black,),
                     SizedBox(height: 10,),
-                    Button(text: "Continue with Google", withIcon: true, color: Colors.white, iconImage: "assets/images/google.png",),
+                    Button(text: "Continue with Google", withIcon: true, color: Colors.white, iconImage: "assets/images/google.png", width: MediaQuery.of(context).size.width,),
                     SizedBox(height: 10,),
-                    Button(text: "Continue with Facebook", withIcon: true, color: Colors.white, iconImage: "assets/images/facebook.png",),
+                    Button(text: "Continue with Facebook", withIcon: true, color: Colors.white, iconImage: "assets/images/facebook.png", width: MediaQuery.of(context).size.width,),
                     SizedBox(height: 10,),
-                    Button(text: "Continue with X", withIcon: true, color: Colors.white, iconImage: "assets/images/twitter.png",),
+                    Button(text: "Continue with X", withIcon: true, color: Colors.white, iconImage: "assets/images/twitter.png", width: MediaQuery.of(context).size.width,),
                   ],
                 ),
               ))

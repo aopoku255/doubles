@@ -30,7 +30,7 @@ class Event {
       eventLocation: json['eventLocation'],
       eventStartDate: DateTime.parse(json['eventStartDate']),
       eventEndDate: DateTime.parse(json['eventEndDate']),
-      eventImages: List<String>.from(json['eventImages']),
+      eventImages: json['eventImages'],
       eventStartTime: json['eventStartTime'],
     );
   }
