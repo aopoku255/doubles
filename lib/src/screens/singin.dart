@@ -57,7 +57,9 @@ class _SigninState extends State<Signin> {
           _errorMessage = null;
           _isLoading = false;
         });
-        Navigator.pushNamed(context, '/events');
+        final Map<String, dynamic> responseBody = jsonDecode(response.body);
+        final List<dynamic> eventsJson = responseBody['data'];
+        Navigator.pushNamed(context, '/events', arguments: eventsJson);
       } else {
         try {
           final errorBody = jsonDecode(response.body);

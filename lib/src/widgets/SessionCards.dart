@@ -55,7 +55,8 @@ class SessionCard extends StatelessWidget {
                     width: MediaQuery.of(context).size.width *0.7,
                     child: MainText(text: location, maxLines: 1,)),
               ],
-            )
+            ),
+
           ],
 
         ),

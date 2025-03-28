@@ -7,7 +7,9 @@ class Event {
   final DateTime eventStartDate;
   final DateTime eventEndDate;
   final String eventStartTime;
+  final String eventEndTime;
   final String eventImages;
+  final String eventHost;
 
   Event({
     required this.id,
@@ -18,7 +20,9 @@ class Event {
     required this.eventStartDate,
     required this.eventEndDate,
     required this.eventStartTime,
+    required this.eventEndTime,
     required this.eventImages,
+    required this.eventHost,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,8 @@ class Event {
       eventEndDate: DateTime.parse(json['eventEndDate']),
       eventImages: json['eventImages'],
       eventStartTime: json['eventStartTime'],
+      eventEndTime: json['eventEndTime'],
+      eventHost: json['eventHost'],
     );
   }
 }

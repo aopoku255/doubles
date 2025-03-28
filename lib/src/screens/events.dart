@@ -17,7 +17,7 @@ class Events extends StatefulWidget {
 class _EventsState extends State<Events> {
   int _selectedChipIndex = 0;
   final String name = "Andrews";
-  final List<String> _chipLabels = ["Music", "Food", "Sports", "Movies"];
+  final List<String> _chipLabels = ["Upcoming events", "Past events"];
   final EventService _eventService = EventService();
   late Future<List<Event>> _futureEvents;
 
@@ -29,6 +29,8 @@ class _EventsState extends State<Events> {
 
   @override
   Widget build(BuildContext context) {
+    final List<dynamic> jsonData = ModalRoute.of(context)!.settings.arguments as List<dynamic>;
+    // print(jsonData);
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
@@ -97,7 +99,7 @@ class _EventsState extends State<Events> {
                           children: List.generate(_chipLabels.length, (index) {
                             return Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              const EdgeInsets.symmetric(horizontal: 8.0),
                               child: GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -106,7 +108,7 @@ class _EventsState extends State<Events> {
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.only(top: 20),
-                                  width: 120,
+                                  width: 150,
                                   height: 34,
                                   decoration: BoxDecoration(
                                       color: index == _selectedChipIndex
@@ -157,7 +159,8 @@ class _EventsState extends State<Events> {
                                 startTime: event.eventStartTime,
                                 location: event.eventLocation,
                                 onTap: (){
-                                    Navigator.pushNamed(context, "/events-details");
+                                  Navigator.pushNamed(context, "/events-details", arguments: event);
+
                                 },
                               );
                             }).toList(),
