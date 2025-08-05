@@ -1,55 +1,103 @@
 import 'package:flutter/material.dart';
 
-class TextFieldInput extends StatelessWidget {
+class TextFieldInput extends StatefulWidget {
   final String label;
   final bool? isPasswordField;
   final bool textarea;
   final String? hintText;
   final TextEditingController? controller;
-  final validator;
+  final String? Function(String?)? validator;
 
-  const TextFieldInput(
-      {super.key,
-      required this.label,
-      this.isPasswordField = false,
-      this.hintText,
-      this.textarea = false,
-      this.controller,
-      this.validator});
+  // Dropdown support
+  final List<String>? dropdownItems;
+  final String? value;
+  final void Function(String?)? onChanged;
+
+  const TextFieldInput({
+    super.key,
+    required this.label,
+    this.isPasswordField = false,
+    this.hintText,
+    this.textarea = false,
+    this.controller,
+    this.validator,
+    this.dropdownItems,
+    this.value,
+    this.onChanged,
+  });
+
+  @override
+  State<TextFieldInput> createState() => _TextFieldInputState();
+}
+
+class _TextFieldInputState extends State<TextFieldInput> {
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
+    bool isDropdown = widget.dropdownItems != null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          label,
-          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
+          widget.label,
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 16,
+            color: Colors.black.withOpacity(0.7),
+          ),
         ),
-        TextFormField(
-          controller: controller,
-          validator: validator,
-          obscureText: isPasswordField! ? true : false,
+        const SizedBox(height: 8),
+        isDropdown
+            ? DropdownButtonFormField<String>(
+          value: widget.dropdownItems!.contains(widget.value) ? widget.value : null,
+          items: widget.dropdownItems!
+              .map((item) => DropdownMenuItem(
+            value: item,
+            child: Text(item),
+          ))
+              .toList(),
+          onChanged: widget.onChanged,
+          validator: widget.validator,
+          decoration: InputDecoration(
+            hintText: widget.hintText ?? 'Select an option',
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+          ),
+        )
+            : TextFormField(
+          controller: widget.controller,
+          validator: widget.validator,
+          obscureText: widget.isPasswordField == true ? _obscureText : false,
           cursorColor: Colors.black,
-          maxLines: isPasswordField == false
-              ? textarea == true
-                  ? 5
-                  : 1
+          maxLines: widget.isPasswordField == false
+              ? (widget.textarea == true ? 5 : 1)
               : 1,
           decoration: InputDecoration(
-            hintText: hintText,
+            hintText: widget.hintText,
             border: const OutlineInputBorder(
-              borderSide: BorderSide(),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
-            focusColor: Colors.black,
             focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
+            suffixIcon: widget.isPasswordField == true
+                ? IconButton(
+              icon: Icon(
+                _obscureText ? Icons.visibility_off : Icons.visibility,
+              ),
+              onPressed: () {
+                setState(() {
+                  _obscureText = !_obscureText;
+                });
+              },
+            )
+                : null,
           ),
         ),
       ],

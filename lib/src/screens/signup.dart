@@ -1,3 +1,4 @@
+import 'package:doubles/src/model/signup.dart';
 import 'package:doubles/src/service/baseUrl.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +23,7 @@ class _SignupState extends State<Signup> {
   bool _isLoading = false;
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
 
   @override
   void dispose() {
@@ -29,6 +31,7 @@ class _SignupState extends State<Signup> {
     _passwordController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -46,40 +49,45 @@ class _SignupState extends State<Signup> {
   Future<void> _handleSignup() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
-      final response = await http.post(
-        Uri.parse('${baseUrl}/auth/signup'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'email': _emailController.text,
-          'firstName': _firstNameController.text,
-          'lastName': _lastNameController.text,
-          'password': _passwordController.text,
-        }),
-      );
 
-      print(response.body);
+      try {
+        final response = await http.post(
+          Uri.parse('$baseUrl/auth/signup'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'email': _emailController.text,
+            'firstName': _firstNameController.text,
+            'lastName': _lastNameController.text,
+            'password': _passwordController.text,
+            'phone': _phoneNumberController.text,
+          }),
+        );
 
-      if (response.statusCode == 201) {
-        print('Signup successful');
-        setState(() {
-          _errorMessage = null;
-          _isLoading = false;
-        });
-        Navigator.pushNamed(context, '/signin');
-      } else {
-        try {
+        setState(() => _isLoading = false);
+
+        if (response.statusCode == 201) {
+          final parsed = SignupResponseModel.fromJson(jsonDecode(response.body));
+
+          Navigator.pushNamed(
+            context,
+            '/otp',
+            arguments: parsed, // Passing just the OTP data
+          );
+        } else {
           final errorBody = jsonDecode(response.body);
-          setState(() => _errorMessage = errorBody['message'] ?? 'Signup failed');
-        } catch (e) {
-          setState(() => _errorMessage = 'Signup failed: ${response.body}');
-        }
-        if (_errorMessage != null) {
+          _errorMessage = errorBody['message'] ?? 'Signup failed';
           _showSnackbar(_errorMessage!);
         }
+      } catch (e) {
+        print(e);
+        setState(() {
+          _errorMessage = 'Something went wrong. Please try again.';
+        });
+        _showSnackbar(_errorMessage!);
       }
-      setState(() => _isLoading = false);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +112,7 @@ class _SignupState extends State<Signup> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              MainText(text: "REGISTER YOUR ACCOUNT", color: Colors.black),
+              MainText(text: "GET STARTED WITH DOUBLES", color: Colors.black, fontWeight: FontWeight.bold,),
               if (_errorMessage != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -157,6 +165,18 @@ class _SignupState extends State<Signup> {
                       ),
                       SizedBox(height: 20),
                       TextFieldInput(
+                        label: "Phone Number",
+                        controller: _phoneNumberController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Phone Number is required';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 20),
+                      TextFieldInput(
+                        isPasswordField: true,
                         label: "Password",
                         controller: _passwordController,
                         validator: (value) {

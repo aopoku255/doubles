@@ -38,7 +38,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             children: [
               Image.asset(
                 "assets/images/logo.png",
-                height: 20,
+                height: 40,
               ),
               Expanded(
                 child: PageView.builder(
@@ -122,21 +122,22 @@ class Onboard {
 
 final List<Onboard> _pages = [
   Onboard(
+    image: "assets/images/gather.png",
+    title: "Interactive & Practical Approach",
+    description:
+    "Our workshops are interactive, using practical tools and insights to empower couples to tackle issues proactively, fostering open communication and deeper connections.",
+  ),
+  Onboard(
     image: "assets/images/events.png",
-    title: "Plan and manage events with Doubles",
-    description: "Here you'll see all your events for the year",
+    title: "Strengthening Marriages with Purpose",
+    description: "Doubles is a quarterly workshop designed to engage couples in meaningful conversations that nurture, support, and strengthen the bonds of marriage according to God's divine plan.",
   ),
   Onboard(
     image: "assets/images/schedule.png",
-    title: "Secure Your Tickets Easily",
-    description: "Buy and manage your event tickets in one place effortlessly.",
+    title: "Equipping Couples with the Right Tools",
+    description: " Since its launch in 2022, Doubles has been a game-changer for marriages, providing couples with essential tools and unwavering support to enhance their relationships.",
   ),
-  Onboard(
-    image: "assets/images/gather.png",
-    title: "Connect with Attendees",
-    description:
-        "Meet and engage with other attendees before and after events.",
-  ),
+
 ];
 
 class OnboardingContent extends StatelessWidget {
@@ -156,19 +157,20 @@ class OnboardingContent extends StatelessWidget {
 
         const Spacer(),
 
-        Image.asset(
-          image,
-          height: 250,
-        ),
+        // Image.asset(
+        //   image,
+        //   height: 250,
+        // ),
         const Spacer(),
         Text(
           title,
           textAlign: TextAlign.center,
           style: Theme.of(context)
               .textTheme
-              .headline5!
+              .headline3!
               .copyWith(fontWeight: FontWeight.w500, color: AppColors.primaryBlue),
         ),
+        SizedBox(height: 30,),
         Text(description, style: Theme.of(context).textTheme!.labelLarge!.copyWith(color: AppColors.primaryBlue), textAlign: TextAlign.center,),
         const Spacer()
       ],

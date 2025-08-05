@@ -4,6 +4,7 @@
 
 import 'package:doubles/src/layout.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/bold_text.dart';
 import '../widgets/button.dart';
 import '../widgets/main_text.dart';
@@ -31,6 +32,22 @@ class _LoginState extends State<Login> {
   bool _isValidEmail(String email) {
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     return emailRegex.hasMatch(email);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkForToken();
+  }
+
+  Future<void> _checkForToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('authToken');
+
+    if (token != null && token.isNotEmpty) {
+      // ✅ Token found – navigate to events screen
+      Navigator.pushReplacementNamed(context, '/home'); // or use '/events' route
+    }
   }
 
   @override
